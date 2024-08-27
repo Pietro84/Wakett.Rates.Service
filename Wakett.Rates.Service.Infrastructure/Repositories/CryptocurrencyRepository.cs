@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Wakett.Rates.Service.Core.Interfaces;
 using System.Diagnostics;
+using Wakett.Rates.Service.Core.Models;
 
 namespace Wakett.Rates.Service.Infrastructure.Repositories
 {
@@ -64,6 +65,34 @@ namespace Wakett.Rates.Service.Infrastructure.Repositories
             {
                 //TODO LOG
             }
+        }
+
+
+        public async Task<IEnumerable<CryptocurrencyQuoteUpdated>> GetNewQuotesAsync()
+        {
+            var quotes = new List<CryptocurrencyQuoteUpdated>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new SqlCommand("SELECT Symbol, Price FROM CryptocurrencyQuotes WHERE Status = 'New'", connection))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            quotes.Add(new CryptocurrencyQuoteUpdated
+                            {
+                                Symbol = reader.GetString(0),
+                                NewPrice = reader.GetDecimal(1)
+                            });
+                        }
+                    }
+                }
+            }
+
+            return quotes;
         }
     }
 }

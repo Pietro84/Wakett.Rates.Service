@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Rebus.Bus;
 using System;
 using Wakett.Rates.Service.Core.Interfaces;
 using Wakett.Rates.Service.Core.Models;
@@ -15,6 +16,7 @@ namespace MyScheduledTaskService.Tests.Services
         private readonly Mock<IApiService> _mockApiService;
         private readonly Mock<ICryptocurrencyRepository> _mockCryptoCurrencyRepo;
         private readonly ServiceManager _serviceManager;
+        private readonly Mock<IBus> _mockIBus;
 
         public ServiceManagerTests()
         {
@@ -23,7 +25,7 @@ namespace MyScheduledTaskService.Tests.Services
             _mockApiService = new Mock<IApiService>();
             _mockCryptoCurrencyRepo = new Mock<ICryptocurrencyRepository>();
 
-            _serviceManager = new ServiceManager(_mockConfigRepo.Object, _mockLogRepo.Object, _mockApiService.Object, _mockCryptoCurrencyRepo.Object);
+            _serviceManager = new ServiceManager(_mockConfigRepo.Object, _mockLogRepo.Object, _mockApiService.Object, _mockCryptoCurrencyRepo.Object, _mockIBus.Object);
         }
 
         [Fact]

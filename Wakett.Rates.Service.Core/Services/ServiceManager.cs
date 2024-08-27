@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Rebus.Bus;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wakett.Rates.Service.Core.Interfaces;
+using Wakett.Rates.Service.Core.Models;
 
 namespace Wakett.Rates.Service.Core.Services
 {
@@ -13,13 +15,15 @@ namespace Wakett.Rates.Service.Core.Services
         private readonly ILogRepository _logRepository;
         private readonly IApiService _apiService;
         private readonly ICryptocurrencyRepository _cryptocurrencyRepository;
+        private readonly IBus _bus;
 
-        public ServiceManager(IConfigurationRepository configurationRepository, ILogRepository logRepository, IApiService apiService, ICryptocurrencyRepository cryptocurrencyRepository)
+        public ServiceManager(IConfigurationRepository configurationRepository, ILogRepository logRepository, IApiService apiService, ICryptocurrencyRepository cryptocurrencyRepository, IBus bus)
         {
             _configurationRepository = configurationRepository;
             _logRepository = logRepository;
             _apiService = apiService;
             _cryptocurrencyRepository = cryptocurrencyRepository;
+            _bus = bus;
         }
 
         public void ExecuteTasks()
@@ -54,7 +58,24 @@ namespace Wakett.Rates.Service.Core.Services
             var prices = await _apiService.GetLatestCryptoCurrencyAsync();
             if (prices != null && prices.Count > 0)
             {
+                //aggiorno quote
                 await _cryptocurrencyRepository.UpsertCryptocurrencyQuotesAsync(prices);
+
+                //recupero solo le nuove quote (in stato NEW)
+                var newQuotes = await _cryptocurrencyRepository.GetNewQuotesAsync();
+
+                foreach (var quote in newQuotes)
+                {
+                    var message = new CryptocurrencyQuoteUpdated
+                    {
+                        Symbol = quote.Symbol,
+                        NewPrice = quote.NewPrice
+                    };
+
+                    //invio messaggio
+                    await _bus.Publish(message);
+                }
+
             }
         }
 
