@@ -228,6 +228,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\HubHandler.cs" />
     <Compile Include="Helpers\RebusConfig.cs" />
     <Compile Include="Services\ServiceIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

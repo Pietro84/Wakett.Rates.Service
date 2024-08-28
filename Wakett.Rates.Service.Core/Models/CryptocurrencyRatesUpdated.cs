@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Wakett.Rates.Service.Core.Models
 {
-    public class CryptocurrencyQuoteUpdated
+    public class CryptocurrencyRatesUpdated
     {
         public string Symbol { get; set; }
         public decimal NewPrice { get; set; }
-        public DateTime LastUpdated { get; set; }
+        //public DateTime LastUpdated { get; set; }
     }
 }

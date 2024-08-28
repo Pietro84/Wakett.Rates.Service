@@ -20,33 +20,31 @@ namespace Wakett.Rates.Service.Infrastructure.Repositories
             _connectionString = connectionString;
         }
 
-        public async Task UpsertCryptocurrencyQuotesAsync(Dictionary<string, decimal> prices)
+        public async Task UpsertCryptocurrencyRatesAsync(Dictionary<string, decimal> prices)
         {
             try
             {
-                // Crea un DataTable per memorizzare i dati
+                // Creo una DataTable per memorizzare i dati
                 var quotesTable = new DataTable();
                 quotesTable.Columns.Add("Symbol", typeof(string));
                 quotesTable.Columns.Add("Price", typeof(decimal));
                 quotesTable.Columns.Add("LastUpdated", typeof(DateTime));
 
-                // Popola il DataTable
+                // Popolo la DataTable
                 foreach (var kvp in prices)
                 {
                     quotesTable.Rows.Add(kvp.Key, kvp.Value, DateTime.UtcNow);
                 }
 
-                // Utilizza SqlBulkCopy per inserire i dati nella tabella temporanea
+                // Utilizzo SqlBulkCopy per inserire i dati nella tabella temporanea
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
 
-                    // Esegui la stored procedure per aggiornare e inserire i dati
+                    // Eseguo la stored procedure per aggiornare e inserire i dati
                     using (var command = new SqlCommand("dbo.UpsertCryptocurrencyQuotes", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-
-                        // Configura il parametro per il tipo di tabella
                         var parameter = new SqlParameter
                         {
                             ParameterName = "@Quotes",
@@ -56,7 +54,6 @@ namespace Wakett.Rates.Service.Infrastructure.Repositories
                         };
 
                         command.Parameters.Add(parameter);
-
                         await command.ExecuteNonQueryAsync();
                     }
                 }
@@ -68,9 +65,9 @@ namespace Wakett.Rates.Service.Infrastructure.Repositories
         }
 
 
-        public async Task<IEnumerable<CryptocurrencyQuoteUpdated>> GetNewQuotesAsync()
+        public async Task<IEnumerable<CryptocurrencyRatesUpdated>> GetNewRatesAsync()
         {
-            var quotes = new List<CryptocurrencyQuoteUpdated>();
+            var quotes = new List<CryptocurrencyRatesUpdated>();
 
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -82,7 +79,7 @@ namespace Wakett.Rates.Service.Infrastructure.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            quotes.Add(new CryptocurrencyQuoteUpdated
+                            quotes.Add(new CryptocurrencyRatesUpdated
                             {
                                 Symbol = reader.GetString(0),
                                 NewPrice = reader.GetDecimal(1)

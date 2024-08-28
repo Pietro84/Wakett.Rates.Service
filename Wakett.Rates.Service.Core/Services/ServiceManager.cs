@@ -61,14 +61,14 @@ namespace Wakett.Rates.Service.Core.Services
             if (prices != null && prices.Count > 0)
             {
                 //aggiorno quote
-                await _cryptocurrencyService.UpsertCryptocurrencyQuotesAsync(prices);
+                await _cryptocurrencyService.UpsertCryptocurrencyRatesAsync(prices);
 
                 //recupero solo le nuove quote (in stato NEW)
-                var newQuotes = await _cryptocurrencyService.GetNewQuotesAsync();
+                var newQuotes = await _cryptocurrencyService.GetNewRatesAsync();
 
                 foreach (var quote in newQuotes)
                 {
-                    var message = new CryptocurrencyQuoteUpdated
+                    var message = new CryptocurrencyRatesUpdated
                     {
                         Symbol = quote.Symbol,
                         NewPrice = quote.NewPrice

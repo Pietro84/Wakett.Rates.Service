@@ -62,6 +62,6 @@ namespace Wakett.Rates.Service.Core.Models
         public string LastUpdated { get; set; }
 
         [JsonPropertyName("quote")]
-        public Dictionary<string, Quote> Quote { get; set; }
+        public Dictionary<string, CryptocurrenceyQuoteData> Quote { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Wakett.Rates.Service.Core.Models
 {
-    public class Quote
+    public class CryptocurrenceyQuoteData
     {
         [JsonPropertyName("price")]
         public decimal Price { get; set; }

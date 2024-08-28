@@ -33,7 +33,7 @@ namespace Wakett.Rates.Service.Core.Services
                 var response = await _httpClient.GetAsync("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest");
                 CryptocurrencyData cryptoData = null;
 
-                var latestQuotes = new Dictionary<string, decimal>();
+                var latestRates = new Dictionary<string, decimal>();
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -56,7 +56,7 @@ namespace Wakett.Rates.Service.Core.Services
 
                     if (cryptoData?.Data != null)
                     {
-                        latestQuotes = cryptoData.Data.ToDictionary(
+                        latestRates = cryptoData.Data.ToDictionary(
                                c => c.Symbol+"/"+"USD",
                                c => c.Quote["USD"].Price
                            );
@@ -69,7 +69,7 @@ namespace Wakett.Rates.Service.Core.Services
                         //}
                     }
 
-                    return latestQuotes;
+                    return latestRates;
                 }
 
                 //response.EnsureSuccessStatusCode(); // Lancia un'eccezione se la risposta non è di successo

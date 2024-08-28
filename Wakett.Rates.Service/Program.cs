@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Rebus.Activation;
+using Rebus.Bus;
 using Rebus.Config;
 using Rebus.Routing.TypeBased;
 using System;
@@ -31,7 +32,6 @@ namespace Wakett.Rates.Service
         private static void ConfigureServices(IServiceCollection services)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ConnectionString;
-            //string connectionStringRebus = ConfigurationManager.ConnectionStrings["RebusConnectionString"].ConnectionString;
             //services.AddRebus(configure => configure.Transport(t => t.UseSqlServer(connectionStringRebus, "RatesQueue")).Routing(r => r.TypeBased().Map<CryptocurrencyQuoteUpdated>("EventQueue")));
             BusConfiguration(services);
             services.AddSingleton<ICryptocurrencyRepository>(new CryptocurrencyRepository(connectionString));
@@ -47,15 +47,13 @@ namespace Wakett.Rates.Service
 
         private static void BusConfiguration(IServiceCollection services)
         {
-            string connectionStringRebus = "server=SEQSQL315\\SEQSQL315;database=Rebus;user id=dbo_Test;password=F90C631D-2F8F-4770-9766-1DA4C261EC9B;integrated security=false;MultipleActiveResultSets=true;Trusted_Connection=False;TrustServerCertificate=True;";
-
-            // Configura Rebus nel contesto del Dependency Injection
+            string connectionStringRebus = ConfigurationManager.ConnectionStrings["RebusConnectionString"].ConnectionString;
+            // Configurazione di Rebus nel contesto del Dependency Injection
             services.AddRebus(configure => configure
-                .Routing(r => r.TypeBased().Map<CryptocurrencyQuoteUpdated>("TableNameTestPie"))
-                .Options(o => o.SetBusName("default"))
-                .Transport(t => t.UseSqlServer(new SqlServerLeaseTransportOptions(connectionStringRebus), "TableNameTestPie"))
-                .Subscriptions(s => s.StoreInSqlServer(connectionStringRebus, "SubscriptionTestPie", true)),true);
-
+                    .Transport(t => t.UseSqlServer(new SqlServerLeaseTransportOptions(connectionStringRebus), "RatesUpdatedQueue"))
+                    .Subscriptions(s => s.StoreInSqlServer(connectionStringRebus, "Subscriptions", true))
+                    .Routing(r => r.TypeBased().Map<CryptocurrencyRatesUpdated>("RatesUpdatedQueue"))
+                    .Options(o => o.SetBusName("default")),true);
         }
     }
 }

@@ -187,10 +187,10 @@
     <Compile Include="Interfaces\ICryptocurrencyRepository.cs" />
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\IServiceManager.cs" />
-    <Compile Include="Models\CryptoCurrency.cs" />
+    <Compile Include="Models\Cryptocurrency.cs" />
     <Compile Include="Models\CryptocurrencyData.cs" />
-    <Compile Include="Models\CryptocurrencyQuoteUpdated.cs" />
-    <Compile Include="Models\Quote.cs" />
+    <Compile Include="Models\CryptocurrencyRatesUpdated.cs" />
+    <Compile Include="Models\CryptocurrenceyQuoteData.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\TaskConfiguration.cs" />
     <Compile Include="Services\ApiService.cs" />

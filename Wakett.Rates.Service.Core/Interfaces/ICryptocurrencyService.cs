@@ -9,7 +9,7 @@ namespace Wakett.Rates.Service.Core.Interfaces
 {
     public interface ICryptocurrencyService
     {
-        Task UpsertCryptocurrencyQuotesAsync(Dictionary<string, decimal> prices);
-        Task<IEnumerable<CryptocurrencyQuoteUpdated>> GetNewQuotesAsync();
+        Task UpsertCryptocurrencyRatesAsync(Dictionary<string, decimal> prices);
+        Task<IEnumerable<CryptocurrencyRatesUpdated>> GetNewRatesAsync();
     }
 }

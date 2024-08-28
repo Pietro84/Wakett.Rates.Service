@@ -17,14 +17,14 @@ namespace Wakett.Rates.Service.Core.Services
             _cryptocurrencyRepository = cryptocurrencyRepository;
         }
 
-        public async Task UpsertCryptocurrencyQuotesAsync(Dictionary<string, decimal> prices)
+        public async Task UpsertCryptocurrencyRatesAsync(Dictionary<string, decimal> prices)
         {
-            await _cryptocurrencyRepository.UpsertCryptocurrencyQuotesAsync(prices);   
+            await _cryptocurrencyRepository.UpsertCryptocurrencyRatesAsync(prices);   
         }
 
-        public async Task<IEnumerable<CryptocurrencyQuoteUpdated>> GetNewQuotesAsync()
+        public async Task<IEnumerable<CryptocurrencyRatesUpdated>> GetNewRatesAsync()
         {
-            return await _cryptocurrencyRepository.GetNewQuotesAsync();
+            return await _cryptocurrencyRepository.GetNewRatesAsync();
         }
     }
 }

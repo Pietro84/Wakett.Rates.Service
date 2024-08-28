@@ -36,7 +36,7 @@ namespace Wakett.Rates.Service.Tests.Services
         {
             try
             {
-                var message = new CryptocurrencyQuoteUpdated
+                var message = new CryptocurrencyRatesUpdated
                 {
                     Symbol = "ABC/USD",
                     NewPrice = 12345.67m
@@ -58,24 +58,29 @@ namespace Wakett.Rates.Service.Tests.Services
             var prices = await _apiClient.GetLatestCryptoCurrencyAsync();
             if (prices != null && prices.Count > 0)
             {
-                //Aggiornamento delle quote scaricate in base alla condizione nella stored
-                await _cryptocurrencyRepository.UpsertCryptocurrencyQuotesAsync(prices);
+                //Aggiorno delle quote scaricate in base alla condizione nella stored
+                await _cryptocurrencyRepository.UpsertCryptocurrencyRatesAsync(prices);
 
                 //Recupero solo le nuove quote (quelle in stato NEW)
-                var newQuotes = await _cryptocurrencyRepository.GetNewQuotesAsync();
-
-                foreach (var quote in newQuotes)
+                var newRates = await _cryptocurrencyRepository.GetNewRatesAsync();
+                List<CryptocurrencyRatesUpdated> message = new List<CryptocurrencyRatesUpdated>();
+                if(newRates != null)
                 {
-                    var message = new CryptocurrencyQuoteUpdated
+                    foreach (var quote in newRates)
                     {
-                        Symbol = quote.Symbol,
-                        NewPrice = quote.NewPrice
-                    };
+                        var item = new CryptocurrencyRatesUpdated
+                        {
+                            Symbol = quote.Symbol,
+                            NewPrice = quote.NewPrice
+                        };
+                        message.Add(item);
+                    }
 
                     //Invio messaggi delle quote
                     var bus = RebusConfig.ConfigureBus();
                     await bus.Send(message);
                 }
+
             }
 
             // Assert
