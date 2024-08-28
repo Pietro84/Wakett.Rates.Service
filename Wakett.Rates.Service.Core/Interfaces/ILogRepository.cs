@@ -8,6 +8,6 @@ namespace Wakett.Rates.Service.Core.Interfaces
 {
     public interface ILogRepository
     {
-        void Log(int taskId, string message, string type);
+        void Log(string message, string type);
     }
 }

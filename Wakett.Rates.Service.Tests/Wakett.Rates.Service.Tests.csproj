@@ -228,13 +228,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\MockHelper.cs" />
     <Compile Include="Helpers\RebusConfig.cs" />
-    <Compile Include="Repositories\LogRepositoryTests.cs" />
-    <Compile Include="Repositories\SchedulerRepositoryTests.cs" />
-    <Compile Include="Services\ApiServiceTests.cs" />
-    <Compile Include="Services\ApiServiceIntegrationTests.cs" />
-    <Compile Include="Services\ServiceManagerTests.cs" />
+    <Compile Include="Services\ServiceIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

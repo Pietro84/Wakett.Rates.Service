@@ -11,29 +11,31 @@ namespace Wakett.Rates.Service.Core.Services
 {
     public class ServiceManager : IServiceManager
     {
-        private readonly IConfigurationRepository _configurationRepository;
-        private readonly ILogRepository _logRepository;
+        private readonly IConfigurationService _configurationService;
+        private readonly ICryptocurrencyService _cryptocurrencyService;
+        private readonly ILogService _logService;
         private readonly IApiService _apiService;
-        private readonly ICryptocurrencyRepository _cryptocurrencyRepository;
+
         private readonly IBus _bus;
 
-        public ServiceManager(IConfigurationRepository configurationRepository, ILogRepository logRepository, IApiService apiService, ICryptocurrencyRepository cryptocurrencyRepository, IBus bus)
+        public ServiceManager(IConfigurationService configurationService, 
+                              ILogService logService, IApiService apiService, ICryptocurrencyService cryptocurrencyService, IBus bus)
         {
-            _configurationRepository = configurationRepository;
-            _logRepository = logRepository;
+            _configurationService = configurationService;
+            _cryptocurrencyService = cryptocurrencyService;
+            _logService = logService;
             _apiService = apiService;
-            _cryptocurrencyRepository = cryptocurrencyRepository;
             _bus = bus;
         }
 
         public void ExecuteTasks()
         {
             //Get Task Configuration from Scheduler
-            var taskConfig = _configurationRepository.GetTaskConfiguration();
+            var taskConfig = _configurationService.GetTaskConfiguration();
 
             if (taskConfig == null)
             {
-                _logRepository.Log(0, "No task configuration found.", "Error");
+                _logService.Log("No task configuration found.", "Error");
                 return;
             }
 
@@ -41,14 +43,14 @@ namespace Wakett.Rates.Service.Core.Services
             {
                 try
                 {
-                    _logRepository.Log(taskConfig.TaskId, "Executing task...", "Info");
+                    _logService.Log("Executing task...", "Info");
                     ExecuteTask().Wait();
-                    _configurationRepository.UpdateLastRunTime(taskConfig.TaskId, DateTime.Now);
-                    _logRepository.Log(taskConfig.TaskId, "Task executed successfully.", "Info");
+                    _configurationService.UpdateLastRunTime(taskConfig.TaskId, DateTime.Now);
+                    _logService.Log("Task executed successfully.", "Info");
                 }
                 catch (Exception ex)
                 {
-                    _logRepository.Log(taskConfig.TaskId, $"Error executing task: {ex.Message}", "Error");
+                    _logService.Log($"Error executing task: {ex.Message}", "Error");
                 }
             }
         }
@@ -59,10 +61,10 @@ namespace Wakett.Rates.Service.Core.Services
             if (prices != null && prices.Count > 0)
             {
                 //aggiorno quote
-                await _cryptocurrencyRepository.UpsertCryptocurrencyQuotesAsync(prices);
+                await _cryptocurrencyService.UpsertCryptocurrencyQuotesAsync(prices);
 
                 //recupero solo le nuove quote (in stato NEW)
-                var newQuotes = await _cryptocurrencyRepository.GetNewQuotesAsync();
+                var newQuotes = await _cryptocurrencyService.GetNewQuotesAsync();
 
                 foreach (var quote in newQuotes)
                 {

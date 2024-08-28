@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wakett.Rates.Service.Tests.Repositories
+namespace Wakett.Rates.Service.Core.Interfaces
 {
-    internal class SchedulerRepositoryTests
+    public interface ILogService
     {
+        void Log(string message, string type);
     }
 }

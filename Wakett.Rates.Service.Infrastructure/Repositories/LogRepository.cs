@@ -17,13 +17,13 @@ namespace Wakett.Rates.Service.Infrastructure.Repositories
             _connectionString = connectionString;
         }
 
-        public void Log(int taskId, string message, string type)
+        public void Log(string message, string type)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("INSERT INTO AppLogs (TaskId, LogMessage, LogType) VALUES (@TaskId, @LogMessage, @LogType)", conn);
-                cmd.Parameters.AddWithValue("@TaskId", taskId);
+                SqlCommand cmd = new SqlCommand("INSERT INTO AppLogs (LogMessage, LogType) VALUES (@LogMessage, @LogType)", conn);
+                //cmd.Parameters.AddWithValue("@TaskId", taskId);
                 cmd.Parameters.AddWithValue("@LogMessage", message);
                 cmd.Parameters.AddWithValue("@LogType", type);
                 cmd.ExecuteNonQuery();

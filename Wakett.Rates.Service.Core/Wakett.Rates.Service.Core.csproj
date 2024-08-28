@@ -180,9 +180,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IApiService.cs" />
+    <Compile Include="Interfaces\IConfigurationService.cs" />
+    <Compile Include="Interfaces\ICryptocurrencyService.cs" />
     <Compile Include="Interfaces\ILogRepository.cs" />
     <Compile Include="Interfaces\IConfigurationRepository.cs" />
     <Compile Include="Interfaces\ICryptocurrencyRepository.cs" />
+    <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\IServiceManager.cs" />
     <Compile Include="Models\CryptoCurrency.cs" />
     <Compile Include="Models\CryptocurrencyData.cs" />
@@ -191,6 +194,9 @@
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\TaskConfiguration.cs" />
     <Compile Include="Services\ApiService.cs" />
+    <Compile Include="Services\CryptocurrencyService.cs" />
+    <Compile Include="Services\ConfigurationService.cs" />
+    <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
